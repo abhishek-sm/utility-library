@@ -8,6 +8,7 @@
 -  **JwtUtils** – Secure JWT token generation, validation, and parsing.
 -  **FileUtils** – File handling utilities such as reading, writing, and directory operations.
 -  **DateUtils** – Date manipulation utilities including methods for formatting, parsing, and calculating differences between dates, time zones, and more.
+-  **HttpUtils** – HTTP request utilities with support for **GET**, **POST**, **PUT**, **DELETE**, and **PATCH** methods, enabling easy interaction with APIs and servers.
 -  **More features will be added**.
 
 
