@@ -7,6 +7,7 @@
 -  **StringUtils** – String manipulation methods like capitalize, trim, reverse, etc.
 -  **JwtUtils** – Secure JWT token generation, validation, and parsing.
 -  **FileUtils** – File handling utilities such as reading, writing, and directory operations.
+-  **DateUtils** – Date manipulation utilities including methods for formatting, parsing, and calculating differences between dates, time zones, and more.
 -  **More features will be added**.
 
 

@@ -19,11 +19,14 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import lombok.experimental.UtilityClass;
+
 /**
  * Utility class for file operations. This class provides methods for reading,
  * writing, copying, moving, deleting files, managing directories, and working
  * with file compression (ZIP).
  */
+@UtilityClass
 public class FileUtils {
 
     /**
@@ -271,4 +274,3 @@ public class FileUtils {
     }
     
 }
-
