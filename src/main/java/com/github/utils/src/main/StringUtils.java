@@ -4,9 +4,12 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
+import lombok.experimental.UtilityClass;
+
 /**
  * Utility class with string-related methods.
  */
+@UtilityClass
 public class StringUtils {
 
     /**
