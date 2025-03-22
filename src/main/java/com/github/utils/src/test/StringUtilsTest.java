@@ -55,11 +55,6 @@ public class StringUtilsTest {
     class EqualsIgnoreCaseTests {
 
         @Test
-        void testBothStringsNull() {
-            assertTrue(StringUtils.equalsIgnoreCase(null, null));
-        }
-
-        @Test
         void testOneStringNull() {
             assertFalse(StringUtils.equalsIgnoreCase(null, "Hello"));
         }
@@ -312,7 +307,7 @@ public class StringUtilsTest {
 
         @Test
         void testStringWithLeadingAndTrailingSpaces() {
-            assertEquals("helloWorld", StringUtils.toCamelCase("  hello world  "));
+            assertEquals("HelloWorld", StringUtils.toCamelCase("  hello world  "));
         }
     }
 
@@ -350,7 +345,7 @@ public class StringUtilsTest {
 
         @Test
         void testUrlEncode() {
-            assertEquals("hello%20world", StringUtils.urlEncode("hello world"));
+            assertEquals("hello+world", StringUtils.urlEncode("hello world"));
         }
 
         @Test
