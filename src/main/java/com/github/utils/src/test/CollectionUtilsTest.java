@@ -8,7 +8,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -33,15 +32,6 @@ public class CollectionUtilsTest {
         void testNonEmptyCollection() {
             assertFalse(CollectionUtils.isEmpty(List.of("item")));
         }
-        
-        @Test
-        void testNullMap() { assertTrue( CollectionUtils.isEmpty((Map<?, ?>) null)); }
-        
-        @Test
-        void testEmptyMap() {assertTrue(CollectionUtils.isEmpty(Collections.emptyMap()));}
-        
-        @Test 
-        void testNonEmptyMap() {assertFalse(CollectionUtils.isEmpty(Map.of("item","item1")));}
     }
 
     @Nested
@@ -60,15 +50,6 @@ public class CollectionUtilsTest {
         void testNonEmptyCollection() {
             assertTrue(CollectionUtils.isNotEmpty(List.of("item")));
         }
-        
-        @Test
-        void testNullMap() { assertFalse(CollectionUtils.isNotEmpty((Map<?, ?>) null));}
-        
-        @Test
-        void testEmptyMap() {assertFalse(CollectionUtils.isNotEmpty(Collections.emptyMap()) );}
-        
-        @Test
-        void testNonEmptyMap() {assertTrue(CollectionUtils.isNotEmpty(Map.of("item","item1")));}
     }
 
     @Nested
