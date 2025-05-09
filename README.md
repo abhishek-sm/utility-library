@@ -1,6 +1,6 @@
-# Utility Library
+# Java Utility Library – Reusable Helper Functions for Java Projects
 
-**Utility Library** is a lightweight and efficient Java utility library that provides commonly used helper functions, making development faster and more convenient.
+**Utility Library** is a lightweight and efficient **Java utility library** designed to speed up development with reusable helper functions. It’s available as a **Maven/Gradle dependency** and is ideal for Java developers looking for common utilities.
 
 ##  Features
 
@@ -28,7 +28,13 @@
 ```
 
 ### **Gradle**
-```xml
+```groovy
 dependencies {
     implementation 'com.github.utils:utility-library:1.0-SNAPSHOT'
 }
+```
+
+## Keywords
+
+java utility library, maven java utils, helper functions, reusable java code, date string file http json utils, java common methods, lightweight java library
+
