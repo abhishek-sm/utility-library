@@ -3,16 +3,17 @@ package com.github.utils.src.main;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.Socket;
 import java.net.URI;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -40,7 +41,7 @@ public class NetworkUtils {
      * @return The response as a string
      * @throws IOException If an I/O error occurs
      */
-    public static String sendGetRequest(String urlString) throws IOException {
+    public static String sendGetRequest(String urlString) throws IOException, InterruptedException {
         return sendGetRequest(urlString, null, DEFAULT_CONNECTION_TIMEOUT, DEFAULT_READ_TIMEOUT);
     }
 
@@ -52,7 +53,7 @@ public class NetworkUtils {
      * @return The response as a string
      * @throws IOException If an I/O error occurs
      */
-    public static String sendGetRequest(String urlString, Map<String, String> headers) throws IOException {
+    public static String sendGetRequest(String urlString, Map<String, String> headers) throws IOException, InterruptedException {
         return sendGetRequest(urlString, headers, DEFAULT_CONNECTION_TIMEOUT, DEFAULT_READ_TIMEOUT);
     }
 
@@ -67,43 +68,25 @@ public class NetworkUtils {
      * @throws IOException If an I/O error occurs
      */
     public static String sendGetRequest(String urlString, Map<String, String> headers,
-                                        int connectionTimeout, int readTimeout) throws IOException {
-        URL url = new URL(urlString);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                                        int connectionTimeout, int readTimeout) throws IOException, InterruptedException {
+        HttpClient client = HttpClient.newBuilder()
+                .connectTimeout(Duration.ofMillis(connectionTimeout))
+                .build();
 
-        try {
-            connection.setRequestMethod("GET");
-            connection.setConnectTimeout(connectionTimeout);
-            connection.setReadTimeout(readTimeout);
+        HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
+                .uri(URI.create(urlString))
+                .GET()
+                .timeout(Duration.ofMillis(readTimeout));
 
-            // Add headers if provided
-            if (headers != null) {
-                for (Map.Entry<String, String> entry : headers.entrySet()) {
-                    connection.setRequestProperty(entry.getKey(), entry.getValue());
-                }
-            }
-
-            // Get the response code
-            int responseCode = connection.getResponseCode();
-
-            // Read the response
-            StringBuilder response = new StringBuilder();
-            try (BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(
-                            responseCode >= 400
-                                    ? connection.getErrorStream()
-                                    : connection.getInputStream(),
-                            StandardCharsets.UTF_8))) {
-
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    response.append(line);
-                }
-                return response.toString();
-            }
-        } finally {
-            connection.disconnect();
+        if (headers != null) {
+            headers.forEach(requestBuilder::header);
         }
+
+        HttpRequest request = requestBuilder.build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        return response.body();
     }
 
     /**
@@ -115,7 +98,7 @@ public class NetworkUtils {
      * @return The response as a string
      * @throws IOException If an I/O error occurs
      */
-    public static String sendPostRequest(String urlString, String requestBody, String contentType) throws IOException {
+    public static String sendPostRequest(String urlString, String requestBody, String contentType) throws IOException, InterruptedException {
         return sendPostRequest(urlString, requestBody, contentType, null, DEFAULT_CONNECTION_TIMEOUT, DEFAULT_READ_TIMEOUT);
     }
 
@@ -130,7 +113,7 @@ public class NetworkUtils {
      * @throws IOException If an I/O error occurs
      */
     public static String sendPostRequest(String urlString, String requestBody,
-                                         String contentType, Map<String, String> headers) throws IOException {
+                                         String contentType, Map<String, String> headers) throws IOException, InterruptedException {
         return sendPostRequest(urlString, requestBody, contentType, headers, DEFAULT_CONNECTION_TIMEOUT, DEFAULT_READ_TIMEOUT);
     }
 
@@ -146,54 +129,30 @@ public class NetworkUtils {
      * @return The response as a string
      * @throws IOException If an I/O error occurs
      */
+
     public static String sendPostRequest(String urlString, String requestBody, String contentType,
-                                         Map<String, String> headers, int connectionTimeout, int readTimeout) throws IOException {
-        URL url = new URL(urlString);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                                         Map<String, String> headers, int connectionTimeout, int readTimeout)
+            throws IOException, InterruptedException {
 
-        try {
-            connection.setRequestMethod("POST");
-            connection.setConnectTimeout(connectionTimeout);
-            connection.setReadTimeout(readTimeout);
-            connection.setDoOutput(true);
+        HttpClient client = HttpClient.newBuilder()
+                .connectTimeout(Duration.ofMillis(connectionTimeout))
+                .build();
 
-            // Set content type
-            connection.setRequestProperty("Content-Type", contentType);
+        HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
+                .uri(URI.create(urlString))
+                .timeout(Duration.ofMillis(readTimeout))
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+                .header("Content-Type", contentType);
 
-            // Add headers if provided
-            if (headers != null) {
-                for (Map.Entry<String, String> entry : headers.entrySet()) {
-                    connection.setRequestProperty(entry.getKey(), entry.getValue());
-                }
-            }
-
-            // Write request body
-            try (OutputStream os = connection.getOutputStream()) {
-                byte[] input = requestBody.getBytes(StandardCharsets.UTF_8);
-                os.write(input, 0, input.length);
-            }
-
-            // Get the response code
-            int responseCode = connection.getResponseCode();
-
-            // Read the response
-            StringBuilder response = new StringBuilder();
-            try (BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(
-                            responseCode >= 400
-                                    ? connection.getErrorStream()
-                                    : connection.getInputStream(),
-                            StandardCharsets.UTF_8))) {
-
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    response.append(line);
-                }
-                return response.toString();
-            }
-        } finally {
-            connection.disconnect();
+        if (headers != null) {
+            headers.forEach(requestBuilder::header);
         }
+
+        HttpRequest request = requestBuilder.build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        return response.body();
     }
 
     /**
@@ -202,9 +161,8 @@ public class NetworkUtils {
      * @param baseUrl The base URL
      * @param params Map of query parameters
      * @return The constructed URL string
-     * @throws IOException If encoding fails
      */
-    public static String buildUrlWithQueryParams(String baseUrl, Map<String, String> params) throws IOException {
+    public static String buildUrlWithQueryParams(String baseUrl, Map<String, String> params) {
         if (params == null || params.isEmpty()) {
             return baseUrl;
         }
@@ -300,22 +258,20 @@ public class NetworkUtils {
      * @return The public IP address or null if it couldn't be determined
      * @throws IOException If an I/O error occurs
      */
-    public static String getPublicIpAddress() throws IOException {
-        URL url = new URL("https://api.ipify.org");
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+    public static String getPublicIpAddress() throws IOException, InterruptedException {
+        HttpClient client = HttpClient.newBuilder()
+                .connectTimeout(Duration.ofMillis(DEFAULT_CONNECTION_TIMEOUT))
+                .build();
 
-        try {
-            connection.setRequestMethod("GET");
-            connection.setConnectTimeout(DEFAULT_CONNECTION_TIMEOUT);
-            connection.setReadTimeout(DEFAULT_READ_TIMEOUT);
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("https://api.ipify.org"))
+                .timeout(Duration.ofMillis(DEFAULT_READ_TIMEOUT))
+                .GET()
+                .build();
 
-            try (BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) {
-                return reader.readLine();
-            }
-        } finally {
-            connection.disconnect();
-        }
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        return response.body();
     }
 
     /**
@@ -456,9 +412,8 @@ public class NetworkUtils {
      *
      * @param urlString The URL string to parse
      * @return Map containing the URL components (scheme, host, port, path, query, fragment)
-     * @throws IOException If the URL is malformed
      */
-    public static Map<String, String> parseUrl(String urlString) throws IOException {
+    public static Map<String, String> parseUrl(String urlString) {
         Map<String, String> components = new HashMap<>();
         URI uri = URI.create(urlString);
 
@@ -479,65 +434,42 @@ public class NetworkUtils {
      * @return The file content as a byte array
      * @throws IOException If an I/O error occurs
      */
-    public static byte[] downloadFile(String urlString) throws IOException {
-        URL url = new URL(urlString);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+    public static byte[] downloadFile(String urlString) throws IOException, InterruptedException {
+        HttpClient client = HttpClient.newBuilder()
+                .connectTimeout(Duration.ofMillis(DEFAULT_CONNECTION_TIMEOUT))
+                .build();
 
-        try {
-            connection.setRequestMethod("GET");
-            connection.setConnectTimeout(DEFAULT_CONNECTION_TIMEOUT);
-            connection.setReadTimeout(DEFAULT_READ_TIMEOUT);
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(urlString))
+                .timeout(Duration.ofMillis(DEFAULT_READ_TIMEOUT))
+                .GET()
+                .build();
 
-            int contentLength = connection.getContentLength();
-            byte[] buffer;
+        HttpResponse<byte[]> response = client.send(request, HttpResponse.BodyHandlers.ofByteArray());
 
-            if (contentLength > 0) {
-                buffer = new byte[contentLength];
-            } else {
-                buffer = new byte[8192]; // Default buffer size
-            }
-
-            int bytesRead;
-            int offset = 0;
-
-            try (java.io.InputStream in = connection.getInputStream()) {
-                while ((bytesRead = in.read(buffer, offset, buffer.length - offset)) != -1) {
-                    offset += bytesRead;
-                    if (offset >= buffer.length) {
-                        byte[] newBuffer = new byte[buffer.length * 2];
-                        System.arraycopy(buffer, 0, newBuffer, 0, buffer.length);
-                        buffer = newBuffer;
-                    }
-                }
-            }
-
-            // Create result array of exact size
-            byte[] result = new byte[offset];
-            System.arraycopy(buffer, 0, result, 0, offset);
-
-            return result;
-        } finally {
-            connection.disconnect();
-        }
+        return response.body();
     }
 
     /**
-     * Gets the MIME type of a URL.
+     * Gets the MIME type of URL.
      *
      * @param urlString The URL to check
      * @return The MIME type of the URL's content
      * @throws IOException If an I/O error occurs
      */
-    public static String getMimeType(String urlString) throws IOException {
-        URL url = new URL(urlString);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+    public static String getMimeType(String urlString) throws IOException, InterruptedException {
+        HttpClient client = HttpClient.newHttpClient();
 
-        try {
-            connection.setRequestMethod("HEAD");
-            return connection.getContentType();
-        } finally {
-            connection.disconnect();
-        }
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(urlString))
+                .method("HEAD", HttpRequest.BodyPublishers.noBody())
+                .build();
+
+        HttpResponse<Void> response = client.send(request, HttpResponse.BodyHandlers.discarding());
+
+        return response.headers()
+                .firstValue("Content-Type")
+                .orElse(null);
     }
 
     /**
@@ -547,18 +479,20 @@ public class NetworkUtils {
      * @return true if the URL exists, false otherwise
      */
     public static boolean urlExists(String urlString) {
+        HttpClient client = HttpClient.newBuilder()
+                .connectTimeout(Duration.ofMillis(DEFAULT_CONNECTION_TIMEOUT))
+                .build();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(urlString))
+                .timeout(Duration.ofMillis(DEFAULT_READ_TIMEOUT))
+                .method("HEAD", HttpRequest.BodyPublishers.noBody())
+                .build();
+
         try {
-            URL url = new URL(urlString);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("HEAD");
-            connection.setConnectTimeout(DEFAULT_CONNECTION_TIMEOUT);
-            connection.setReadTimeout(DEFAULT_READ_TIMEOUT);
-
-            int responseCode = connection.getResponseCode();
-            connection.disconnect();
-
-            return responseCode == HttpURLConnection.HTTP_OK;
-        } catch (IOException e) {
+            HttpResponse<Void> response = client.send(request, HttpResponse.BodyHandlers.discarding());
+            return response.statusCode() == 200;
+        } catch (IOException | InterruptedException e) {
             return false;
         }
     }
@@ -654,19 +588,20 @@ public class NetworkUtils {
      * @return The HTTP response code
      * @throws IOException If an I/O error occurs
      */
-    public static int getHttpResponseCode(String urlString) throws IOException {
-        URL url = new URL(urlString);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+    public static int getHttpResponseCode(String urlString) throws IOException, InterruptedException {
+        HttpClient client = HttpClient.newBuilder()
+                .connectTimeout(Duration.ofMillis(DEFAULT_CONNECTION_TIMEOUT))
+                .build();
 
-        try {
-            connection.setRequestMethod("HEAD");
-            connection.setConnectTimeout(DEFAULT_CONNECTION_TIMEOUT);
-            connection.setReadTimeout(DEFAULT_READ_TIMEOUT);
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(urlString))
+                .timeout(Duration.ofMillis(DEFAULT_READ_TIMEOUT))
+                .method("HEAD", HttpRequest.BodyPublishers.noBody())
+                .build();
 
-            return connection.getResponseCode();
-        } finally {
-            connection.disconnect();
-        }
+        HttpResponse<Void> response = client.send(request, HttpResponse.BodyHandlers.discarding());
+
+        return response.statusCode();
     }
 
     /**
@@ -676,18 +611,20 @@ public class NetworkUtils {
      * @return Map of HTTP response headers
      * @throws IOException If an I/O error occurs
      */
-    public static Map<String, List<String>> getHttpHeaders(String urlString) throws IOException {
-        URL url = new URL(urlString);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+    public static Map<String, List<String>> getHttpHeaders(String urlString) throws IOException, InterruptedException {
+        HttpClient client = HttpClient.newBuilder()
+                .connectTimeout(Duration.ofMillis(DEFAULT_CONNECTION_TIMEOUT))
+                .build();
 
-        try {
-            connection.setRequestMethod("HEAD");
-            connection.setConnectTimeout(DEFAULT_CONNECTION_TIMEOUT);
-            connection.setReadTimeout(DEFAULT_READ_TIMEOUT);
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(urlString))
+                .timeout(Duration.ofMillis(DEFAULT_READ_TIMEOUT))
+                .method("HEAD", HttpRequest.BodyPublishers.noBody())
+                .build();
 
-            return connection.getHeaderFields();
-        } finally {
-            connection.disconnect();
-        }
+        HttpResponse<Void> response = client.send(request, HttpResponse.BodyHandlers.discarding());
+
+        return response.headers().map();
     }
+
 }
