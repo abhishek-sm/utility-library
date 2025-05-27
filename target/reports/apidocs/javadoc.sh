@@ -1,0 +1,1 @@
+/home/abhishek-s-m/.sdkman/candidates/java/22-open/bin/javadoc -J-Duser.language= -J-Duser.country= @options @packages

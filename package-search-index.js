@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.github.utils.src.main"},{"l":"com.github.utils.src.main.constants"},{"l":"com.github.utils.src.main.enums"},{"l":"com.github.utils.src.main.exception"},{"l":"com.github.utils.src.main.http"},{"l":"com.github.utils.src.test"},{"l":"com.github.utils.src.usage"}];updateSearchResults();
