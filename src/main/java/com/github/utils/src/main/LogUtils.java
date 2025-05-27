@@ -115,7 +115,7 @@ public class LogUtils {
     public static class Logger {
         private final String name;
         private final LogManager logManager;
-        private ThreadLocal<Map<String, Object>> contextFields = ThreadLocal.withInitial(HashMap::new);
+        private final ThreadLocal<Map<String, Object>> contextFields = ThreadLocal.withInitial(HashMap::new);
 
         Logger(String name, LogManager logManager) {
             this.name = name;
