@@ -1,6 +1,10 @@
 # Java Utility Library – Reusable Helper Functions for Java Projects
 
+[![Javadoc](https://img.shields.io/badge/docs-javadoc-blue.svg)](https://abhishek-sm.github.io/utility-library/)
+
 **Utility Library** is a lightweight and efficient **Java utility library** designed to speed up development with reusable helper functions. It’s available as a **Maven/Gradle dependency** and is ideal for Java developers looking for common utilities.
+
+[View Full JavaDoc Documentation](https://abhishek-sm.github.io/utility-library/)
 
 ##  Features
 
