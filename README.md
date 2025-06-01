@@ -2,6 +2,8 @@
 
 [![Javadoc](https://img.shields.io/badge/docs-javadoc-blue.svg)](https://abhishek-sm.github.io/utility-library/)
 
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](./LICENSE)
+
 **Utility Library** is a lightweight and efficient **Java utility library** designed to speed up development with reusable helper functions. It’s available as a **Maven/Gradle dependency** and is ideal for Java developers looking for common utilities.
 
 [View Full JavaDoc Documentation](https://abhishek-sm.github.io/utility-library/)
@@ -37,6 +39,11 @@ dependencies {
     implementation 'com.github.utils:utility-library:1.0-SNAPSHOT'
 }
 ```
+
+## License
+
+This project is licensed under the Apache License 2.0 - see the [LICENSE](./LICENSE) file for details.
+
 
 ## Keywords
 
