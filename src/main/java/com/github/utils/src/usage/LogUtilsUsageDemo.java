@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.github.utils.src.main.LogUtils;
+import com.github.utils.src.main.enums.LogLevel;
 
 public class LogUtilsUsageDemo {
 
@@ -110,17 +111,17 @@ public class LogUtilsUsageDemo {
         LogUtils.LogManager logManager = LogUtils.getLogManager();
 
         // Configure console appender
-        LogUtils.ConsoleAppender consoleAppender = new LogUtils.ConsoleAppender(LogUtils.LogLevel.DEBUG);
+        LogUtils.ConsoleAppender consoleAppender = new LogUtils.ConsoleAppender(LogLevel.DEBUG);
         logManager.registerAppender("console", consoleAppender);
 
         // Configure JSON appender with file output
         FileWriter fileWriter = new FileWriter("application.log", true);
-        LogUtils.JsonAppender jsonAppender = new LogUtils.JsonAppender(fileWriter, LogUtils.LogLevel.INFO);
+        LogUtils.JsonAppender jsonAppender = new LogUtils.JsonAppender(fileWriter, LogLevel.INFO);
         logManager.registerAppender("json", jsonAppender);
 
         // Set log levels
-        logManager.setRootLogLevel(LogUtils.LogLevel.INFO);
-        logManager.setLogLevel("com.example.demo", LogUtils.LogLevel.DEBUG);
+        logManager.setRootLogLevel(LogLevel.INFO);
+        logManager.setLogLevel("com.example.demo", LogLevel.DEBUG);
 
         // Add filters
         logManager.addFilter("noHealthChecks",

@@ -8,6 +8,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+import com.github.utils.src.main.enums.LogLevel;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.UtilityClass;
@@ -18,26 +20,6 @@ import lombok.experimental.UtilityClass;
  */
 @UtilityClass
 public class LogUtils {
-
-    /**
-     * Log levels enum to define logging severity
-     */
-    @Getter
-    public enum LogLevel {
-        TRACE(100),
-        DEBUG(200),
-        INFO(300),
-        WARN(400),
-        ERROR(500),
-        FATAL(600);
-
-        private final int severity;
-
-        LogLevel(int severity) {
-            this.severity = severity;
-        }
-
-    }
 
     /**
      * Interface for log appenders/destinations
@@ -133,7 +115,7 @@ public class LogUtils {
     public static class Logger {
         private final String name;
         private final LogManager logManager;
-        private ThreadLocal<Map<String, Object>> contextFields = ThreadLocal.withInitial(HashMap::new);
+        private final ThreadLocal<Map<String, Object>> contextFields = ThreadLocal.withInitial(HashMap::new);
 
         Logger(String name, LogManager logManager) {
             this.name = name;
@@ -242,6 +224,7 @@ public class LogUtils {
 
         /**
          * Track execution time of a block of code
+         * 
          * @param operationName Name of the operation to track
          * @param runnable Code to execute and time
          */
@@ -258,6 +241,7 @@ public class LogUtils {
 
         /**
          * Track execution time of a code block that returns a value
+         * 
          * @param operationName Name of the operation to track
          * @param supplier Code to execute and time
          * @return The value returned by the supplier
@@ -516,6 +500,7 @@ public class LogUtils {
 
     /**
      * Get a logger with a specific name
+     * 
      * @param name Logger name (usually the class or package name)
      * @return Logger instance
      */
@@ -525,6 +510,7 @@ public class LogUtils {
 
     /**
      * Get a logger for a specific class
+     * 
      * @param clazz Class to get logger for
      * @return Logger instance
      */

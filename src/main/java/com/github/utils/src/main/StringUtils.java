@@ -161,8 +161,12 @@ public class StringUtils {
      * @return the string with normalized whitespace
      */
     public static String normalizeWhitespace(String str) {
-        return str.replaceAll("\\s+", " ");
+        if (str == null) {
+            return null;
+        }
+        return str.trim().replaceAll("\\s+", " ");
     }
+
 
     /**
      * Truncates a string to a specified length.
@@ -223,7 +227,8 @@ public class StringUtils {
         if (str == null || str.isEmpty()) {
             return str;
         }
-        return str.replaceAll("\\s+", "_").toLowerCase();
+        String cleanedStr = normalizeWhitespace(str);
+        return cleanedStr.replaceAll("\\s+", "_").toLowerCase();
     }
 
     /**
