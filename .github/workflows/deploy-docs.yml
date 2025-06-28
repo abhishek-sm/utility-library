@@ -1,0 +1,32 @@
+name: Deploy Javadoc to GitHub Pages
+
+on:
+  push:
+    branches:
+      - release  # Deploy only from release branch
+
+jobs:
+  generate-and-deploy-docs:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write  # Required to push to gh-pages branch
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '22'  # match your pom.xml
+          distribution: 'temurin'
+
+      - name: Build project and generate Javadoc
+        run: mvn clean install javadoc:javadoc
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./target/site/apidocs
