@@ -1,4 +1,4 @@
-package com.github.utils.src.main;
+package com.github.utils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.github.utils.src.main.constants.RegexPattern;
+import com.github.utils.constants.RegexPattern;
 
 import lombok.experimental.UtilityClass;
 

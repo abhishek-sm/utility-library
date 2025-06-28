@@ -1,4 +1,4 @@
-package com.github.utils.src.test;
+package com.github.utils.test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import com.github.utils.src.main.StringUtils;
+import com.github.utils.StringUtils;
 
 public class StringUtilsTest {
 

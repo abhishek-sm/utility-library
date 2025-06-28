@@ -1,4 +1,4 @@
-package com.github.utils.src.main;
+package com.github.utils;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import com.github.utils.src.main.enums.LogLevel;
+import com.github.utils.enums.LogLevel;
 
 import lombok.Getter;
 import lombok.Setter;

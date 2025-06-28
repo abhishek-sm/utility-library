@@ -1,4 +1,4 @@
-package com.github.utils.src.test;
+package com.github.utils.test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -16,7 +16,7 @@ import java.util.Set;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import com.github.utils.src.main.CollectionUtils;
+import com.github.utils.CollectionUtils;
 
 public class CollectionUtilsTest {
 
