@@ -1,4 +1,4 @@
-package com.github.utils.src.main;
+package com.github.utils;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;

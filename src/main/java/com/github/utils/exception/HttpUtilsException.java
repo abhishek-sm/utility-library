@@ -1,4 +1,4 @@
-package com.github.utils.src.main.exception;
+package com.github.utils.exception;
 
 /**
  * Exception thrown by HttpUtils when an error occurs.

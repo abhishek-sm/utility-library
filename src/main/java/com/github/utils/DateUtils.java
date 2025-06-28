@@ -1,4 +1,4 @@
-package com.github.utils.src.main;
+package com.github.utils;
 
 import java.time.DayOfWeek;
 import java.time.Instant;

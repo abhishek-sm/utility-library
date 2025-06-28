@@ -1,4 +1,4 @@
-package com.github.utils.src.main.http;
+package com.github.utils.http;
 
 import java.io.IOException;
 import java.net.URI;
@@ -18,7 +18,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.utils.src.main.exception.HttpUtilsException;
+import com.github.utils.exception.HttpUtilsException;
 
 import lombok.Data;
 

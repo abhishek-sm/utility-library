@@ -1,12 +1,12 @@
-package com.github.utils.src.usage;
+package com.github.utils.usage;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.github.utils.src.main.LogUtils;
-import com.github.utils.src.main.enums.LogLevel;
+import com.github.utils.LogUtils;
+import com.github.utils.enums.LogLevel;
 
 public class LogUtilsUsageDemo {
 

@@ -1,4 +1,4 @@
-package com.github.utils.src.main.constants;
+package com.github.utils.constants;
 
 import java.util.regex.Pattern;
 

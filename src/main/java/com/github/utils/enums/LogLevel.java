@@ -1,4 +1,4 @@
-package com.github.utils.src.main.enums;
+package com.github.utils.enums;
 
 import lombok.Getter;
 
